@@ -22,8 +22,10 @@ import SearchArticle from '@/views/SearchArticle.vue'
 import Basic from '@/views/Basic.vue'
 import Setting from '@/views/Setting.vue'
 import Empty from '@/views/Empty.vue'
-
-import Personal from '@/views/Personal.vue'
+import Tab1  from '@/views/Tab1.vue'
+import Tab2  from '@/views/Tab2.vue'
+import Essay from '@/views/Essay.vue'
+// import Dynamic from '@/views/Dynamic.vue'
 
 Vue.use(VueRouter)
 
@@ -33,11 +35,25 @@ const routes = [{
 		children: [
 			{
 				path: '/',
-				redirect: 'index'
+				redirect: 'index',
 			},
 			{
 				path: 'index',
-				component: Index
+				component: Index,
+				children:[{
+					path:'/',
+					redirect:'tab1'
+				},
+				{
+					path:'tab1',
+					component:Tab1
+				},
+				{
+					path:'tab2',
+					component:Tab2
+				},
+				]
+
 			},
 			{
 				path: 'articles',
@@ -45,7 +61,8 @@ const routes = [{
 			},
 			{
 				path: 'article/:id',
-				component: ArticleDetail
+				component: ArticleDetail,
+				
 			},
 			{
 				path: 'topics',
@@ -59,10 +76,25 @@ const routes = [{
 			{
 				path: 'users',
 				component: Users
+				
 			},
 			{
 				path: 'user/:id',
 				component: UserDetail,
+				children:[
+				{
+					path:'/',
+					redirect:'essay'
+				},
+				{
+					path:'essay',
+					component:Essay
+				}
+				// {
+				// 	path:'dynamic',
+				// 	component:Dynamic
+				// }
+				]
 				
 				
 			},
@@ -95,6 +127,7 @@ const routes = [{
 			}
 		]
 	},
+	
 	{
 		path: '/sign-in',
 		component: SignIn

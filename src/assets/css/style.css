@@ -79,13 +79,18 @@ p {
 .btn {
 	border: none;
 	cursor: pointer;
+	margin: 8px;
 }
 
 .btn-lg {
 	width: 120px;
 	height: 35px;
 }
-
+.btn-sm{
+	width: 60px;
+	height: 30px;
+	
+}
 .btn-rd {
 	border-radius: 20px;
 }
@@ -202,6 +207,8 @@ p {
 .border {
 	border: 1px solid #ddd;
 	border-radius: 5px;
+	padding-top: 5px;
+	padding-bottom: 5px;
 }
 
 /* 下边框 */

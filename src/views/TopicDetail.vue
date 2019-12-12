@@ -13,7 +13,10 @@
 							<span class="sub-title">{{ topicVo.topic.follows }}人关注</span>
 						</p>
 					</div>
-					<div class="col-3"><button class="btn btn-lg btn-rd warning-fill">关注</button></div>
+					<div class="col-3"><!-- <button class="btn btn-lg btn-rd warning-fill">关注</button> -->
+					<!-- <li class="btn btn-lg btn-rd warning-fill" v-if="item.status" @click="changeThumbUps1(item)">关注</li>
+					<li class="btn btn-lg btn-rd warning-fill" v-if="!item.status" @click="changeThumbUps1(item)" >已关注</li> -->
+					</div>
 				</div>
 				<h3 class="title">本专题文章</h3>
 				<dir class="row">
@@ -46,7 +49,10 @@
 						<a :href="topicVo.homepage">{{ topicVo.topic.homepage }}</a>
 					</p>
 				</div>
-				<div class="box border-bottom"><p>分享到:微博、微信</p></div>
+				<div class="box border-bottom"><p>
+				分享到:<i class="iconfont" style="color: rgb(234, 111, 90);">&#xe64d;</i>
+				       <i class="iconfont" style="color: rgb(135, 195, 110);">&#xe61f;</i>
+				</p></div>
 				<div class="box border-bottom">
 					<p class="sub-title">管理员</p>
 					<img :src="topicVo.admin.avatar" class="avatar-xs" />
@@ -54,6 +60,11 @@
 				</div>
 				<div class="box border-bottom">
 					<p class="sub-title">关注的人</p>
+						<div v-for="(item, index) in topicVo.articleList" :key="index" class="col-12 ">
+									<img :src="item.author.avatar" class="avatar" />
+									<p>{{ item.author.nickname }}</p>
+						</div>
+					
 				</div>
 			</div>
 		</div>
@@ -64,6 +75,8 @@
 export default {
 	data() {
 		return {
+			count: 9,
+			currentPage: 1,
 			topicVo: {}
 		};
 	},
@@ -75,7 +88,17 @@ export default {
 		});
 	},
 	computed: {},
-	methods: {}
+	methods: {
+		changeThumbUps1(item) {
+							if (item.status == 0) {
+								item.status = 1
+								item.fans--
+							} else {
+								item.status = 0
+								item.fans++
+							}
+						}
+	}
 };
 </script>
 
@@ -83,10 +106,45 @@ export default {
 .box {
 	width: 90%;
 	margin: 0 auto;
-	padding: 10px;
+	padding: 15px;
 	min-height: 100px;
 }
 .box > p {
 	line-height: 20px;
+}
+@font-face {
+  font-family: 'iconfont';  /* project id 1432509 */
+  src: url('//at.alicdn.com/t/font_1432509_1i9vqpkaitkj.eot');
+  src: url('//at.alicdn.com/t/font_1432509_1i9vqpkaitkj.eot?#iefix') format('embedded-opentype'),
+  url('//at.alicdn.com/t/font_1432509_1i9vqpkaitkj.woff2') format('woff2'),
+  url('//at.alicdn.com/t/font_1432509_1i9vqpkaitkj.woff') format('woff'),
+  url('//at.alicdn.com/t/font_1432509_1i9vqpkaitkj.ttf') format('truetype'),
+  url('//at.alicdn.com/t/font_1432509_1i9vqpkaitkj.svg#iconfont') format('svg');
+}
+@font-face {
+  font-family: 'iconfont';  /* project id 1432509 */
+  src: url('//at.alicdn.com/t/font_1432509_k99amrdnmcd.eot');
+  src: url('//at.alicdn.com/t/font_1432509_k99amrdnmcd.eot?#iefix') format('embedded-opentype'),
+  url('//at.alicdn.com/t/font_1432509_k99amrdnmcd.woff2') format('woff2'),
+  url('//at.alicdn.com/t/font_1432509_k99amrdnmcd.woff') format('woff'),
+  url('//at.alicdn.com/t/font_1432509_k99amrdnmcd.ttf') format('truetype'),
+  url('//at.alicdn.com/t/font_1432509_k99amrdnmcd.svg#iconfont') format('svg');
+}
+.iconfont{
+	font-family:"iconfont"!important;
+	font-size:22px;
+	font-style:normal;
+	color:#aaa;
+	-webkit-font-smoothing: antialiased;
+	-webkit-text-stroke-width: 0.2px;
+	-moz-osx-font-smoothing: grayscale;
+	padding-left: 10px;
+	
+}
+.avatar{
+	height: 50px;
+	width: 50px;
+	border-radius: 50%;
+	margin-top: 5px;
 }
 </style>

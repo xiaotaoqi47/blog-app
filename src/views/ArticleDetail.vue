@@ -9,6 +9,7 @@
 					articleVo.article.createTime.time.minute
 				}}:{{ articleVo.article.createTime.time.second }}
 			</span>
+			<p>{{ articleVo.author.likes }}</p>
 		</div>
 		<div v-html="articleVo.article.content"></div>
 	</div>

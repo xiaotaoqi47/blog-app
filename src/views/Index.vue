@@ -1,194 +1,326 @@
 <template>
 	<div>
-		<div class="row">
-			<div class="col-3" v-for="(item, index) in topics" :key="index">
-				<div class="card link shadow">
-					<router-link :to="{ path: '/topic/' + item.id }"><img :src="item.logo" class="logo" /></router-link>
-					<p class="title">{{ item.topicName }}</p>
-					<p class="sub-title">{{ item.description.slice(0, 20) }}...</p>
-					<p class="meta">
-						<span class="gutter">{{ item.articles }}篇文章,</span>
-						<span>{{ item.follows }}人关注</span>
-					</p>
-				</div>
+			<div class="cont">
+			  <div class="left">
+			   <div class="carousel-wrap">
+			   	<transition-group tag="ul" class="slide-ul" name="slide">
+			   		<li v-for="(item,index) in slideList"
+			   		 :key="index"
+			   		  v-show="index===currentIndex" 
+			   		  @mouseenter="stop"
+			   		   @mouseleave="go">
+			   			<a :href="item.url">
+			   				<img :src="item.image" :alt="item.description">
+			   			</a>
+			   		</li>
+			   	</transition-group>
+			   	<div class="carousel-items">
+			   		<span v-for="(item,index) in slideList" :class="{active:index===currentIndex}" @mouseover="change(index)"></span>
+			   	</div>
+			   </div>
+			  </div>
+			   <div class="right">
+			     <h3>社区热点</h3>
+				 
+				 <div class="button">
+				 <button class="btn btn-sm btn-rd">文学</button>
+				 <button class="btn btn-sm btn-rd">流行</button>
+				 <button class="btn btn-sm btn-rd">文化</button>
+				 <button class="btn btn-sm btn-rd">生活</button>
+				 <button class="btn btn-sm btn-rd">经管</button>
+				 <button class="btn btn-sm btn-rd">科技</button>
+				 <button class="btn btn-sm btn-rd">通讯</button>
+				 <button class="btn btn-sm btn-rd">交互</button>
+			   </div>
+			   
+			   <h3>关注我们</h3>
+			   <br>
+			   <i class="iconfont">&#xe63d;</i>
+			   <h4 class="text">经典阅读</h4>
+			   <p class="text1">精品文章每日推送</p>
+			   <img src="../assets/img/ma.jpg" >
+			   </div>
 			</div>
-		</div>
-        
-		<div class="row">
-			<div class="col-8">
-				<h3>热门文章</h3>
-				<div v-for="(item, index) in articles" :key="index" class="col-12">
-					<div class="media-wraaper border">
-						<div class="media-left">
-							<router-link :to="{ path: '/user/' + item.article.userId }">
-							<img :src="item.author.avatar" class="avatar-lg link" />
-							</router-link>
-							<p>{{ item.author.nickname }}</p>
-							<strong>来自</strong>
-							<p>{{ item.topic.topicName }}</p>
-						</div>
-						<div class="media-middle flex flex-around flex-left">
-							<router-link :to="{ path: '/article/' + item.article.id }" class="subtitle">
-								 {{ item.article.title }} 
-							</router-link>
-							<p class="sub-title link">{{ item.article.summary }}</p>
-							<p>
-								<span class="meta gutter">{{ item.article.comments }}评论</span>
-								<span class="meta">{{ item.article.likes }}喜欢</span>
-							</p>
-						</div>
-						<div class="media-right"><img :src="item.article.thumbnail" alt="" /></div>
-					</div>
-				</div>
-			</div>
-			<div class="col-4">
+			<div class="col">
 				<h3>热门作者</h3>
-				<div v-for="(item, index) in users" :key="index" class="row">
-					<div class="col-12 border box">
-						<div class="flex-center-y">
-							<router-link :to="{ path: '/user/' + item.id }">
-							<img :src="item.avatar" class="avatar-xs link" />
-							</router-link>
-							<p class="sub-title">{{ item.nickname }}</p>
+							<div v-for="(item, index) in users" :key="index" class="row">
+								<div class="col-12 border box">
+									<div class="flex-center-y">
+										<router-link :to="{ path: '/user/' + item.id }">
+										<img :src="item.avatar" class="avatar" />
+										</router-link>
+										<p class="sub-title">{{ item.nickname }}</p>
+									</div>
+									<div class="flex-center-y">
+										<p class="meta">{{ item.fans }}个粉丝</p>
+										<p class="meta">写了{{ item.articles }}篇文章</p>
+									</div>
+									<div class="flex-center-y">
+							            <li class="btn btn-follow" v-if="item.status" @click="changeThumbUps1(item)">关注</li>
+							            <li class="btn btn-follow" v-if="!item.status" @click="changeThumbUps1(item)" >已关注</li>
+						            </div>
+								</div>
+							</div>
 						</div>
-						<div class="flex-center-y">
-							<p class="meta">{{ item.fans }}个粉丝</p>
-							<p class="meta">写了{{ item.articles }}篇文章</p>
-						</div>
-						<div class="flex-center-y"><button class="btn btn-follow">关注</button></div>
+			
+		<div class="boxx">
+			<div class="l-left">
+                  <div class="tab">
+					<router-link to="/index/Tab1">
+						<h2>每日精选</h2>
+					</router-link>
+                  </div>
+				  <div class="tab">
+					<router-link to="/index/Tab2">
+						<h2>关注动态</h2>
+					</router-link>
 					</div>
-				</div>
+			</div>
+			<div class="l-right">
+				<router-view />
 			</div>
 		</div>
+		
 	</div>
 </template>
 
 <script>
-export default {
-	data() {
-		isActive: true
-		return {
-			articles: [],
-			users: [],
-			topics: []
-		};
-	},
-	created() {
-		this.axios.get(this.GLOBAL.baseUrl + '/article').then(res => {
-			// console.log(res.data.data);
-			this.articles = res.data.data;
-		});
-		this.axios.get(this.GLOBAL.baseUrl + '/user').then(res => {
-			// console.log(res.data.data);
-			this.users = res.data.data;
-		});
-		this.axios.get(this.GLOBAL.baseUrl + '/topic').then(res => {
-			// console.log(res.data.data);
-			this.topics = res.data.data;
-		});
-	},
-	methods:{
-		changeTab: function() {
-			this.isActive = !this.isActive
-			this.selected = this.selected == 0 ? 1 : 0
+	export default {
+		data() {
+			return {
+				articles: [],
+				users: [],
+				topics: [],
+				currentIndex: 0,
+				timer: null,
+				count: 9,
+				currentPage: 1,
+				slideList: [{
+						"url": "#",
+						"description": "one",
+						"image": "http://ww1.sinaimg.cn/large/006acpLLly1g9t75k0ox5j30l40akjs8.jpg"
+					},
+					{
+						"url": "#",
+						"description": "two",
+						"image": "http://ww1.sinaimg.cn/large/006acpLLly1g9t766mu3uj30l40akqf4.jpg"
+					},
+					{
+						"url": "#",
+						"description": "three",
+						"image": "http://ww1.sinaimg.cn/large/006acpLLly1g9t77itkz0j30l40akq92.jpg"
+					},
+					{
+						"url": "#",
+						"description": "four",
+						"image": "http://ww1.sinaimg.cn/large/006acpLLly1g9tm39c8t4j30l40akjyf.jpg"
+					},
+					{
+						"url": "#",
+						"description": "five",
+						"image": "http://ww1.sinaimg.cn/large/006acpLLly1g9tm39c8t4j30l40akjyf.jpg"
+					}
+
+				]
+			};
 		},
-	}
-};
+		created() {
+			this.axios.get(this.GLOBAL.baseUrl + '/article').then(res => {
+				// console.log(res.data.data);
+				this.articles = res.data.data;
+			});
+			this.axios.get(this.GLOBAL.baseUrl + '/user').then(res => {
+				// console.log(res.data.data);
+				this.users = res.data.data;
+			});
+			this.axios.get(this.GLOBAL.baseUrl + '/topic').then(res => {
+				// console.log(res.data.data);
+				this.topics = res.data.data;
+			});
+		},
+		methods: {
+
+			go() {
+				this.timer = setInterval(() => {
+					this.autoPlay()
+				}, 3000)
+			},
+			stop() {
+				clearInterval(this.timer)
+				this.timer = null
+			},
+			change(index) {
+				this.currentIndex = index
+			},
+			autoPlay() {
+				this.currentIndex++
+				if (this.currentIndex > this.slideList.length - 1) {
+					this.currentIndex = 0
+				}
+			},
+			changeThumbUps1(item) {
+								if (item.status == 0) {
+									item.status = 1
+									item.fans--
+								} else {
+									item.status = 0
+									item.fans++
+								}
+							},
+		}
+
+	};
 </script>
 
+
 <style scoped="scoped">
-.logo {
-	border-top-left-radius: 5px;
-	border-top-right-radius: 5px;
-}
-.logo:hover {
-	opacity: 0.6;
-}
-.box {
-	display: flex;
-	justify-content: space-around;
-	height: 70px;
-	padding: 10px;
-}
-.btn-follow {
-	background-color: #42c02e;
-	font-weight: 400;
-	font-size: 15px;
-	color: #fff;
-	padding: 5px 0;
-	width: 80px;
-	height: 30px;
-	border-radius: 40px;
-	display: inline-block;
-	text-align: center;
-}
-.login-box{
-				width: 400px;
-				height:380px;
-				position: fixed;
-				bottom:130px;
-				left:480px;  
-				display: flex;
-				flex-direction: column;
-			}
-.tab {
-				display: flex;
-				align-items: center;
-				justify-content: space-around;
-				flex: 0 0 13%;
-				background-color:#fff;
-				border-top-left-radius: 5px;
-				border-top-right-radius: 5px;
-			}
+	.avatar{
+		height: 70px;
+		width: 70px;
+		border-radius: 50%;
+	}
+	@font-face {
+	  font-family: 'iconfont';  /* project id 1432498 */
+	  src: url('//at.alicdn.com/t/font_1432498_0bo9jnilz6s7.eot');
+	  src: url('//at.alicdn.com/t/font_1432498_0bo9jnilz6s7.eot?#iefix') format('embedded-opentype'),
+	  url('//at.alicdn.com/t/font_1432498_0bo9jnilz6s7.woff2') format('woff2'),
+	  url('//at.alicdn.com/t/font_1432498_0bo9jnilz6s7.woff') format('woff'),
+	  url('//at.alicdn.com/t/font_1432498_0bo9jnilz6s7.ttf') format('truetype'),
+	  url('//at.alicdn.com/t/font_1432498_0bo9jnilz6s7.svg#iconfont') format('svg');
+	}
+	
+	.iconfont{
+		color: #4CAF50;
+	    font-family:"iconfont" !important;
+	    font-size:32px;font-style:normal;
+	    -webkit-font-smoothing: antialiased;
+	    -webkit-text-stroke-width: 0.2px;
+	    -moz-osx-font-smoothing: grayscale;
+		}
+		.text{
+			margin-left: 38px;
+			margin-top: -35px;
+		}
+		.text1{
+			margin-left: 38px;
+			font-size: 12px;
+		}
+		img{
+			width: 100px;
+			height: 100px;
+		}
+		.boxx{
+			width: 995px;
+			margin-left: -50px;
+			margin-top: -80px;
+		}
+		.col{
+			width: 250px;
+			height: 100px;
+			margin-left: 950px;
 			
-			.tab-item {
-				cursor: pointer;
-				display: inline-block;
-				width: 40%;
-				line-height: 40px;
-				text-align: center;
-				font-size: 15px;
-			}
-.tab-box{
-				flex:1 1 87%;
-				background-color:#fff;
-				color: #333;
-				border-bottom-left-radius: 5px;
-				border-bottom-right-radius: 5px;
-				display: flex;
-				flex-direction: column;
-				align-items: center;
-				padding-top: -20px;
-				padding-bottom: 10px;
-			 
-			}
-.active {
-				color: #00BBDD;
-				font-weight: 600;
-				border-bottom: 2px solid #00BBDD;
-			}
-.input-box{
-				width: 80%;
-				height: 60px;
-				margin-bottom: 35px;
-			}
-			.input-box label{
-				display: block;
-				padding-top: 15px;
-				height: 20px;
-				color: red;
-			}
-			.input-box i{
-				position: relative;
-				top:33px;
-			}
-			.input-box input{
-				display: block;
-				width: 100%;
-				height: 40px;
-				border: 1px solid #ccc;
-				color: #333;
-				padding-left: 25px;
-				padding-top: 5px;
-			}
+		}
+		.l-right{
+			margin-left: 210px;
+			margin-top: -65px;
+		}
+    .cont{
+      width: 90%;
+      margin: 0 auto;
+      /* height: 600px; */
+      display: flex;
+      margin-top: 100px;
+	  border: 1px solid #eee;
+     
+    }
+    .left{
+      flex: 0 0 80%;
+      height: 100%;
+    }
+    .right{
+      flex: 0 0 25%;
+      height: 100%;
+      margin-left: 15px;
+	  margin-top: 5px;
+      background-color: #FFFFFF;
+    }
+	 .btn-follow{
+	    color: #f56c6c;
+	    background: #fef0f0;
+	    border: #fbc4c4 solid;
+	    border-radius: 10px;
+	    padding: 10px 25px;
+	    text-align: center;
+	    font-size: 16px;
+	    -webkit-transform: scale(0.7);
+	  }
+	.carousel-wrap {
+		position: relative;
+		height: 350px;
+		overflow: hidden;
+		
+	}
+	.tab{
+		margin-left: 115px;
+	}
+	.slide-ul {
+		width: 100%;
+		height: 100%;
+	}
+	
+	.slide-ul li {
+		position: absolute;
+		top:0;
+		left:0;
+		width: 100%;
+		height: 100%;
+	}
+	
+	.slide-ul li img {
+		width: 100%;
+		height: 100%;
+	}
+	
+	.carousel-items {
+		z-index: 100;
+		position: relative;
+		top: -25px;
+		text-align: center;
+		font-size: 0;
+		
+		
+	}
+	
+	.carousel-items span {
+		display: inline-block;
+		width: 6px;
+		height: 6px;
+		margin: 0 5px;
+		background-color: #eee;
+		cursor: pointer;
+		border-radius: 50%;
+	}
+	
+	.carousel-items .active {
+		background-color: #FFA500;
+	}
+	
+	/* 动画 */
+	.slide-enter-to {
+		transition: all 1s ease;
+		transform: translateX(0);
+	}
+	
+	.slide-leave-active {
+		transition: all 1s ease;
+		transform: translateX(-100%)
+	}
+	
+	.slide-enter {
+		transform: translateX(100%)
+	}
+	
+	.slide-leave {
+		transform: translateX(0)
+	}
 </style>
