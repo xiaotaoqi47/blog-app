@@ -13,6 +13,7 @@ import ArticleDetail from '@/views/ArticleDetail.vue'
 import TopicDetail from '@/views/TopicDetail.vue'
 import UserDetail from '@/views/UserDetail.vue'
 
+
 import Search from '@/views/Search.vue'
 import SearchUser from '@/views/SearchUser.vue'
 import SearchTopic from '@/views/SearchTopic.vue'
@@ -25,7 +26,14 @@ import Empty from '@/views/Empty.vue'
 import Tab1  from '@/views/Tab1.vue'
 import Tab2  from '@/views/Tab2.vue'
 import Essay from '@/views/Essay.vue'
-// import Dynamic from '@/views/Dynamic.vue'
+import Dynamic from '@/views/Dynamic.vue'
+import Account from '@/views/Account.vue'
+import Topup from '@/views/Topup.vue'
+
+import Info from '@/views/Info.vue'
+import Email from '@/views/Email.vue'
+import Password from '@/views/Password.vue'
+import Bind from '@/views/Bind.vue'
 
 Vue.use(VueRouter)
 
@@ -89,16 +97,45 @@ const routes = [{
 				{
 					path:'essay',
 					component:Essay
-				}
-				// {
-				// 	path:'dynamic',
-				// 	component:Dynamic
-				// }
+				},
+				{
+					path:'dynamic',
+					component:Dynamic
+				},
 				]
 				
 				
 			},
-			
+			{
+				path:'account',
+				component:Account,
+				children:[
+					{
+						path:'/',
+						redirect: 'info'
+					},
+					{
+						path:'info',
+						component: Info
+					},
+					{
+						path:'email',
+						component:Email
+					},
+					{
+						path:'password',
+						component:Password
+					},
+					{
+						path:'bind',
+						component:Bind
+					}
+				]
+			},
+			{
+				path:'topup',
+				component:Topup
+			},
 			{
 					path :'search',
 					component:Search,

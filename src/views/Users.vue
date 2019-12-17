@@ -27,7 +27,6 @@
 						</p>
 						<p class="meta sub">{{ item.articles }}篇文章，{{ item.fans }}个粉丝</p>
 					</div>
-					
 				</div>
 				<div class="flex-center-y">
 					<li class="btn btn-follow" v-if="item.status" @click="changeThumbUps1(item)">关注</li>
@@ -99,8 +98,8 @@
 </script>
 <style scoped>
 	.pic{
-		width: 50px;
-		height: 50px;
+		width: 30px;
+		height: 40px;
 		margin-top: 70px;
 		margin-left: -40px;
 	}
@@ -144,7 +143,7 @@
 		width: 80px;
 		height: 80px;
 		border-radius: 50%;
-		margin-left: 5px;
+		margin-left: -20px;
 	}
 
 	.card-body {

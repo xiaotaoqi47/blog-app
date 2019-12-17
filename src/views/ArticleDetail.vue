@@ -9,9 +9,20 @@
 					articleVo.article.createTime.time.minute
 				}}:{{ articleVo.article.createTime.time.second }}
 			</span>
-			<p>{{ articleVo.author.likes }}</p>
+			<button class="btn" v-on:click="clicklike">{{like_content}}</button>
 		</div>
 		<div v-html="articleVo.article.content"></div>
+		<hr/>
+			<div>
+					<textarea style="width: 600px; height: 100px ; margin-left: 80px;"  placeholder="写下你的评论" v-model="comment">{{comment}}</textarea>
+					<button style="width:40px" v-on:click="clicktext">发送</button>
+				</div>
+			<div>精彩评论</div>
+			<div v-for="( data,index) in comment_content" :key='index' >
+				<div class="col-12 border cmtbox">
+					<div>{{data.name}}评论此文章：{{data.comment}}</div>
+				</div>
+			</div>
 	</div>
 </template>
 
@@ -19,25 +30,108 @@
 export default {
 	data() {
 		return {
-			articleVo: {}
+			articleVo: {},
+			content:[] ,
+			user_id:"",
+			id:null,
+			like_content:"喜欢",
+			comment_content:[],
+			comment:"",
 		};
 	},
 	created() {
-		var id = this.$route.params.id;
-		this.axios.get(this.GLOBAL.baseUrl + '/article/' + id).then(res => {
-			console.log(res.data.data);
+		this.id= this.$route.params.id;
+		var user = JSON.parse(localStorage.getItem("user"));
+		this.user_id =user.id ;
+		this.axios.get(this.GLOBAL.baseUrl + '/article/' + this.id).then(res => {
 			this.articleVo = res.data.data;
+		});
+
+		this.axios.get(this.GLOBAL.baseUrl + '/like', {params: {article: this.id,
+						user:this.user_id,}
+				}).then(res => {
+				if(res.data.code == 1){
+					this.like_content = "取消喜欢";
+				}
+
+		});
+		this.axios.get(this.GLOBAL.baseUrl + '/comment' , {
+			params:{
+				article:this.id,
+			}
+		}).then(res => {
+			console.log(res.data.data)
+			this.comment_content=res.data.data ;
 		});
 	},
 	computed: {},
-	methods: {}
+	methods: {
+		clicktext(){
+			console.log(this.comment)
+			this.axios.get(this.GLOBAL.baseUrl + '/add/comment', {params: {article: this.id,
+					user:this.user_id,
+					content:this.comment,
+				}
+			}).then(res => {
+
+				this.comment="" ;
+			});
+			this.reload();
+		},
+		clicklike(){
+
+			if(this.like_content ==="喜欢"){
+				this.axios.get(this.GLOBAL.baseUrl + '/add/like', {params: {article: this.id,
+						user:this.user_id,}
+				}).then(res => {
+					console.log(res);
+				});
+				this.like_content = "取消喜欢";
+			}else{
+				this.like_content="喜欢"
+				this.axios.get(this.GLOBAL.baseUrl + '/delete/like', {params: {article: this.id,
+						user:this.user_id,}
+				}).then(res => {
+					console.log(res);
+				});
+			}
+
+		}
+	}
 };
 </script>
 
 <style scoped="scoped">
-	
-	.box{
-		height: 50px;
-		line-height: 50px;
+.box{
+	height: 50px;
+	line-height: 50px;
+}
+.btn{
+	background-color: orangered;
+	font-weight: 400;
+	font-size: 15px;
+	color: #fff;
+	padding: 5px 0;
+	width: 80px;
+	height: 30px;
+	border-radius: 40px;
+	display: inline-block;
+	text-align: center;
+}
+	.author{
+		align-content: center;
 	}
+	.cmt{
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+	}
+
+.cmtbox{
+	display: flex;
+	justify-content: space-around;
+	height: 70px;
+	padding: 10px;
+}
 </style>

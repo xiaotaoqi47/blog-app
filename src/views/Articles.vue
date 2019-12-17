@@ -17,7 +17,7 @@
 					</router-link>
 					<p class="sub-title link">{{ item.article.summary }}</p>
 					<p>
-						<span class="meta">{{ item.article.comments }}评论</span>
+						<span class="meta tit">{{ item.article.comments }}评论</span>
 						<span class="meta">{{ item.article.likes }}喜欢</span>
 					</p>
 				</div>
@@ -80,5 +80,8 @@ export default {
 	background-image: url(../assets/img/article.png);
 	background-size: contain;
 	background-position-y: 100px;
+}
+.tit{
+	padding-right: 10px;
 }
 </style>

@@ -16,9 +16,11 @@
 						{{ item.article.title }}
 					</router-link>
 					<p class="sub-title link">{{ item.article.summary }}</p>
-					<p>
-						<span class="meta gutter">{{ item.article.comments }}评论</span>
-						<span class="meta">{{ item.article.likes }}喜欢</span>
+					<p >
+						<li class="btn meta tit" v-if="!item.status" @click="changeThumbUps1(item)"><i class="iconfont">&#xe8ad;</i>{{ item.article.likes }}赞</li>
+						<li class="btn meta tit" v-if="item.status" @click="changeThumbUps1(item)" ><i class="iconfont">&#xe8ad;</i>{{ item.article.likes }}赞</li>
+						<span class="meta gutter"><i class="iconfont">&#xe8b4;</i>{{ item.article.comments }}评论</span>
+						
 					</p>
 				</div>
 			</div>
@@ -35,7 +37,9 @@ export default {
 			users: [],
 			topics: [],
 			currentIndex: 0,
-			timer: null
+			timer: null,
+			count: 9,
+			currentPage: 1,
 		};
 	},
 	created() {
@@ -70,10 +74,49 @@ export default {
 			if (this.currentIndex > this.slideList.length - 1) {
 				this.currentIndex = 0
 			}
-		}
+		},
+		changeThumbUps1(item) {
+							if (item.status == 1) {
+								item.status = 0
+								item.article.likes++
+							} else {
+								item.status = 1
+								item.article.likes--
+							}
+						},
 	}
 };
 </script>
 
 <style>
+.tit{
+    padding-right: 10px;
+}
+@font-face {
+  font-family: 'iconfont';  /* project id 1432509 */
+  src: url('//at.alicdn.com/t/font_1432509_z9mns755f8b.eot');
+  src: url('//at.alicdn.com/t/font_1432509_z9mns755f8b.eot?#iefix') format('embedded-opentype'),
+  url('//at.alicdn.com/t/font_1432509_z9mns755f8b.woff2') format('woff2'),
+  url('//at.alicdn.com/t/font_1432509_z9mns755f8b.woff') format('woff'),
+  url('//at.alicdn.com/t/font_1432509_z9mns755f8b.ttf') format('truetype'),
+  url('//at.alicdn.com/t/font_1432509_z9mns755f8b.svg#iconfont') format('svg');
+}
+@font-face {
+  font-family: 'iconfont';  /* project id 1432509 */
+  src: url('//at.alicdn.com/t/font_1432509_u1680hy7pr.eot');
+  src: url('//at.alicdn.com/t/font_1432509_u1680hy7pr.eot?#iefix') format('embedded-opentype'),
+  url('//at.alicdn.com/t/font_1432509_u1680hy7pr.woff2') format('woff2'),
+  url('//at.alicdn.com/t/font_1432509_u1680hy7pr.woff') format('woff'),
+  url('//at.alicdn.com/t/font_1432509_u1680hy7pr.ttf') format('truetype'),
+  url('//at.alicdn.com/t/font_1432509_u1680hy7pr.svg#iconfont') format('svg');
+}
+.iconfont{
+		color: rgb(255, 126, 126);
+	    font-family:"iconfont" !important;
+	    font-size:18px;
+		font-style:normal;
+	    -webkit-font-smoothing: antialiased;
+	    -webkit-text-stroke-width: 0.2px;
+	    -moz-osx-font-smoothing: grayscale;
+		}
 </style>

@@ -6,21 +6,15 @@
 			<h2>{{ userVo.user.nickname }}</h2>
 			<p class="title-fans-left"> 写了{{userVo.user.articles}}篇文章  {{userVo.user.fans}}粉丝</p>
 			<p class="title-detail">{{ userVo.user.introduction.slice(0, 300) }}</p>
-			<button class="btn btn-follow" @click="show = !show">编辑个人资料</button>
+			
 		</div >
-		<transition name="fade">
-			<div id="edit-box" v-if="show">
-				<input type="text" placeholder="昵称" v-model="userVo.user.nickname">
-				<input type="text" placeholder="地址" v-model="userVo.user.introduction.slice(0,300)">
-				<button class="btn btn-follow" @click="updateUser(userVo)">确定</button>
-			</div>
-		</transition>
+		
 		<div class="boxx">
 			<div class="l-left">
 		          <div class="tab">
 					 <ul> 
 				       <li>
-					     <router-link to="/user/essay">
+					     <router-link :to="{ path: '/user/'+userVo.user.id+'/essay'}">
 						      <p class="bg">文章</p>
 					     </router-link>
 					    </li>
@@ -29,7 +23,7 @@
 				  <div class="tab">
 					<ul>
 					   <li>
-					     <router-link to="/user/dynamic">
+					     <router-link :to="{ path: '/user/'+userVo.user.id+'/dynamic'}">
 						      <p class="bg">关注</p>
 					     </router-link>
 					    </li>
@@ -50,7 +44,7 @@ export default {
 			userVo: {
 				user: {},
 				articleList: {},
-				show: false
+			
 			}
 		};
 	},
@@ -62,22 +56,6 @@ export default {
 		});
 	},
 	methods: {
-		updateUser:function(userVo){
-			let data ={
-					"id": userVo.user.id,
-					"nickname": userVo.user.nickname,
-					"password": userVo.user.password,
-					"avatar": userVo.user.avatar,
-					"address":userVo.user.address,
-					"introduction":userVo.user.introduction,
-			};
-			var _this= this;
-			axios.put('http://u2c7152733.zicp.vip/api/user',JSON.stringify(data))
-			.then(function(response){
-				console.log(response.data.msg);
-				_this.show = false;
-			})
-		},
 		deleteUser:function(id,index){
 			alert(id+" " +index);
 			var param ={
@@ -100,9 +78,10 @@ export default {
 <style scoped="scoped">
 
 .bg{
-			font-size: 14px;
+			font-size: 15px;
 			padding: 5px;
-			color: #f56c6c;
+			color: #4E342E;
+			font-weight: 550;
 
 		}
 
@@ -159,7 +138,7 @@ li a {
 	display: block;
 	color: rgb(51, 51, 51);
 	height: 45px;
-	width: 12%;
+	width: 11%;
 	margin-left: -25px;
 	padding-top: 10px;
 	padding-left: 30px;

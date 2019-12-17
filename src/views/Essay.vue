@@ -21,58 +21,42 @@
 </template>
 
 <script>
-	export default {
-		data() {
-			return {
-				userVo: {
-					user: {},
-					articleList: {},
-					show: false
-				}
-			};
-		},
-		created() {
-			var id = this.$route.params.id;
-			this.axios.get(this.GLOBAL.baseUrl + '/user/' + id).then(res => {
-				console.log(res.data.data);
-				this.userVo = res.data.data;
-			});
-		},
-		methods: {
-			updateUser:function(userVo){
-				let data ={
-						"id": userVo.user.id,
-						"nickname": userVo.user.nickname,
-						"password": userVo.user.password,
-						"avatar": userVo.user.avatar,
-						"address":userVo.user.address,
-						"introduction":userVo.user.introduction,
-				};
-				var _this= this;
-				axios.put('http://u2c7152733.zicp.vip/api/user',JSON.stringify(data))
-				.then(function(response){
-					console.log(response.data.msg);
-					_this.show = false;
-				})
-			},
-			deleteUser:function(id,index){
-				alert(id+" " +index);
-				var param ={
-					id:id
-				}
-				var _this=this;
-				axios.delete('http://u2c7152733.zicp.vip/api/user',{
-					params:param
-				})
-				.then(function(response){
-					console.log(response.data.msg);
-					_this.users.splice(index,1);
-				})
-			},
+export default {
+	data() {
+		return {
+			userVo: {
+				user: {},
+				articleList: {},
 			
-			
-		}
-	};
+			}
+		};
+	},
+	created() {
+		var id = this.$route.params.id;
+		this.axios.get(this.GLOBAL.baseUrl + '/user/' + id).then(res => {
+			console.log(res.data.data);
+			this.userVo = res.data.data;
+		});
+	},
+	methods: {
+		deleteUser:function(id,index){
+			alert(id+" " +index);
+			var param ={
+				id:id
+			}
+			var _this=this;
+			axios.delete('http://u2c7152733.zicp.vip/api/user',{
+				params:param
+			})
+			.then(function(response){
+				console.log(response.data.msg);
+				_this.users.splice(index,1);
+			})
+		},
+		
+		
+	}
+};
 </script>
 
 <style scoped="scoped">
